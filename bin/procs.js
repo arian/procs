@@ -2,75 +2,62 @@
 
 "use strict";
 
-var clint = require('clint')();
 var colors = require('colors');
 var procs = require('../lib/procs');
 var json = require('../package');
 var path = require('path');
 
-function bool(value){
-	if (value == 'no' || value == 'false') return false;
-	if (value == 'yes' || value == 'true') return true;
-	return value;
-}
-
-clint.command('--help', '-h',
-	'usage information');
-clint.command('--version', '-v',
-	'prints the version number');
-clint.command('--file', '-f',
-	'file to compile');
-clint.command('--template', '-t',
-	'template file');
-clint.command('--watch', '-w',
-	'watch the source files for changes', bool);
-
 var files = [];
 var template;
 var watch = false;
 
+var args = process.argv.slice(2);
+
 function help(err){
-	console.log(clint.help(2, ' : '.grey));
+	console.warn('\n ' + ' PROCS -- Stupid simple Markdown documentation generator '.inverse.cyan + '\n');
+	console.log(
+		'  --help, -h     : usage information\n' +
+		'  --version, -v  : prints the version number\n' +
+		'  --file, -f     : file to compile\n' +
+		'  --template, -t : template file\n' +
+		'  --watch, -w    : watch the source files for changes\n');
 	process.exit(err);
 }
 
-clint.on('chunk', function(){
-});
+for (var i = 0; i < args.length; i++){
 
-clint.on('command', function(name, value){
-
-	switch (name){
+	switch (args[i]){
 		case '--help':
+		case '-h':
 			help(0);
 			break;
 		case '--version':
+		case '--v':
 			console.log(json.version);
 			process.exit(0);
 			break;
 		case '--file':
-			files.push(path.normalize(process.cwd() + '/' + value));
+		case '-f':
+			files.push(path.normalize(process.cwd() + '/' + args[++i]));
 			break;
 		case '--template':
-			template = path.normalize(process.cwd() + '/' + value);
+		case '-t':
+			template = path.normalize(process.cwd() + '/' + args[++i]);
 			break;
 		case '--watch':
+		case '-w':
 			watch = true;
 			break;
 	}
 
-});
+}
 
-clint.on('complete', function(){
+if (!template || !files.length) help(1);
 
-	if (!template || !files.length) help(1);
-
-	files.forEach(function(file){
-		procs(file, template, {watch: watch}, function(err){
-			if (err) return console.warn((err + '').red);
-			console.log((file + " has been compiled\n").green);
-		});
+files.forEach(function(file){
+	procs(file, template, {watch: watch}, function(err){
+		if (err) return console.warn((err + '').red);
+		console.log((file + " has been compiled\n").green);
 	});
-
 });
 
-clint.parse(process.argv.slice(2));
