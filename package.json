@@ -1,6 +1,6 @@
 {
   "name": "procs",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Stupid Markdown to HTML documentation tool",
   "main": "index.js",
   "scripts": {
