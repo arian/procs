@@ -2,7 +2,7 @@
   "name": "procs",
   "version": "0.0.4",
   "description": "Stupid Markdown to HTML documentation tool",
-  "main": "index.js",
+  "main": "lib/procs.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
