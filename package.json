@@ -1,6 +1,6 @@
 {
   "name": "procs",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Stupid Markdown to HTML documentation tool",
   "main": "lib/procs.js",
   "scripts": {
